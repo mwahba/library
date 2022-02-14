@@ -1,0 +1,29 @@
+blueprint:
+  name: Light Bonding with Brightness Sync one-way v2
+  description: Bind 2 light entities together to act in unison one-way
+  domain: automation
+  #source_url: https://community.home-assistant.io/t/bond-2-light-entities-with-brightness-sync/264492
+  input:
+    source_light:
+      name: Source Light
+      selector:
+        entity:
+          domain: light
+
+    destination_light:
+      name: Destination Light
+      selector:
+        entity:
+          domain: light
+      
+trigger:
+- entity_id:
+  - !input source_light
+  platform: state
+  attribute: brightness
+action:
+- service: light.turn_on
+  data:
+    brightness: '{{ trigger.to_state.attributes.brightness }}'
+  entity_id:
+    - !input destination_light
